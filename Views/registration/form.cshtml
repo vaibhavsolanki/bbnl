@@ -1,0 +1,1242 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model bbnl.Models.registrationmodel
+@{
+    ViewData["Title"] = "Registration";
+    Layout = "../Shared/_innerLayout.cshtml";
+}
+<style>
+    .statelist{
+        font-weight:bold;
+    }
+     .districtlist{
+        font-weight:bold;
+    }
+    .blocklist {
+        font-weight: bold;
+    }
+    .activebadge{
+        display:block;
+        background-color:yellow;
+        margin:20px;
+        color:#000000 !important;
+        height:30px;
+        width:200px;
+    }
+    .badge a {
+        color: #000000 !important;
+        float:left;
+
+    }
+    .badge {
+        display: table;
+        margin: 10px;
+    }
+</style>
+
+<link href="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css"
+      rel="stylesheet" type="text/css" />
+<script src="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"
+        type="text/javascript"></script>
+<script type="text/javascript">
+
+    $(document).ready(async function () {
+
+        $('.loader').removeClass('d-none')
+        $(document).on('change', "input[type='file']", function (event) {
+            let row = $(this);
+            var target = event.target || event.srcElement;
+            console.log(target, "clicked.");
+            console.log(event);
+            if (target.value.length == 0) {
+                console.log("Suspect Cancel was hit, no files selected.");
+               // cancelButton.onclick();
+            } else {
+                console.log("File selected: ", target.files);
+                var sendData = function () {
+                    var data = new FormData();
+                    data.append("file", target.files[0]);
+                    data.append("folder", row.parent().find('button').attr('data-folder'));
+                    return data;
+                }();
+                console.log(sendData);
+                /*// numFiles = target.files.length;*/
+                 $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UploadFile", "registration")',
+                    data: sendData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data) {
+                            $(row).parent().find('p').html("<a href='" + data + "'>" + data.substr(data.lastIndexOf('/') + 19) + "</a>");
+                            $(row).parent().find("input[type='hidden']").val(data);
+                        }
+                    }
+                });
+            }
+
+
+        })
+
+        $(document).on('click', '.fileadd', function () {
+            $(this).parent().find('input[type="file"]').trigger('click')
+             @*data.append("file", $("#data-forward-grant-file-upload").get(0).files[0]);
+                data.append("refid", "@ViewBag.qrfile");*@
+        })
+
+        $(document).on('click', ".reset", function () {
+
+            //window.location.reload()
+            //$('.form-group span').remove();
+            $("[name='companyname']").val('')
+            $("#iisstate").val('')
+            $("[name='companytype'] option[value='']").prop('selected', true)
+
+            $("[name='signaturename']").val('')
+            $("[name='authorisedaadhar']").val('')
+            $("[name='pan']").val('')
+            $("[name='licenceno']").val('')
+            $("[name='tan']").val('')
+            $("[name='gstin']").val('')
+            $("[name='add1']").val('')
+            $("[name='add2']").val('')
+            $("[name='state'] option[value='']").prop('selected',true).trigger('change')
+            $("[name='dist'] option[value='']").prop('selected', true)
+            $("[type='file']").val('');
+            $("[name='email']").val('')
+            $("[name='mobile']").val('')
+            //$('.field-validation-valid')
+            $('.fileadd').parent().find('p').html('')
+            $('.fileadd').parent().find('input[type="hidden"]').val('')
+            $("#serviceblock_id").multiselect('destroy');
+           // $("#servicestate_id").multiselect('destroy');
+            $("#serviceblock_id").multiselect();
+            $("#servicedistrict_id").multiselect('destroy');
+           $("#servicedistrict_id").multiselect();
+            $(".dropdown-menu:eq(0)  input[type='checkbox']").each(function (i, v) {
+
+                $(this).prop('checked', false).trigger('change')
+            });
+           // $("#servicestate_id").multiselect();
+          
+        });
+        function fileshow() {
+              let pan="@ViewData["panfilepath"]";
+            $(".panfile").html(pan == "" ? "No File" : '<a class="text-warning text-sm" target="_blank" href="../' + pan + '">' + pan.substr(pan.lastIndexOf('/') + 19) + '</a>')
+            $(".panfile").parent().find('input[type="hidden"]').val(pan)
+            // $("[type='file']").val('');
+               let dot="@ViewData["dotfilepath"]";
+            $(".dotfile").html(dot == "" ? "No File" : '<a class="text-warning text-sm"  target="_blank" href="../' + dot + '">' + dot.substr(dot.lastIndexOf('/') + 19)+'</a>')
+            $(".dotfile").parent().find('input[type="hidden"]').val(dot)
+               let gstin="@ViewData["gstinfilepath"]";
+            $(".gstinfile").html(gstin == "" ? "No File" : '<a class="text-warning text-sm"  target="_blank" href="../' + gstin + '">' + gstin.substr(gstin.lastIndexOf('/') + 19)+'</a>')
+            $(".gstinfile").parent().find('input[type="hidden"]').val(gstin)
+
+               let poa="@ViewData["poafilepath"]";
+            $(".poafile").html(poa == "" ? "No File" : '<a class="text-warning text-sm"  target="_blank" href="../' + poa + '">' + poa.substr(poa.lastIndexOf('/') + 19)+'</a>')
+            $(".poafile").parent().find('input[type="hidden"]').val(poa)
+
+               let poi="@ViewData["poifilepath"]";
+            $(".poifile").html(poi == "" ? "No File" : '<a class="text-warning text-sm"  target="_blank" href="../' + poi + '">' + poi.substr(poi.lastIndexOf('/') + 19)+'</a>')
+            $(".poifile").parent().find('input[type="hidden"]').val(poi)
+
+               let comp="@ViewData["compdocfilepath"]";
+            $(".compdoc").html(comp == "" ? "No File" : '<a class="text-warning text-sm"  target="_blank" href="../' + comp + '">' + comp.substr(comp.lastIndexOf('/') + 19)+'</a>')
+            $(".compdoc").parent().find('input[type="hidden"]').val(comp)
+
+                 let addhar="@ViewData["aadharfilepath"]";
+            $(".aadharfile").html(addhar == "" ? "No File" : '<a class="text-warning text-sm"  target="_blank" href="../' + addhar + '">' + addhar.substr(addhar.lastIndexOf('/') + 19)+'</a>')
+            $(".aadharfile").parent().find('input[type="hidden"]').val(addhar)
+
+                 let agg="@ViewData["aggrementfilepath"]";
+            $(".aggrementfile").html(agg == "" ? "No File" : '<a class="text-warning text-sm"  target="_blank" href="../' + agg + '">' + agg.substr(pan.lastIndexOf('/') + 19)+'</a>')
+            $(".aggrementfile").parent().find('input[type="hidden"]').val(agg)
+
+        }
+
+
+        function diabledvalue() {
+            $("[name='companyname']").attr('readonly', true)
+            $("[name='companytype']").attr('readonly', true)
+            $("[name='iisstate']").attr('readonly', true)
+            $("[name='signaturename']").attr('readonly', true)
+            $("[name='authorisedaadhar']").attr('readonly', true)
+            $("[name='pan']").attr('readonly', true)
+            $("[name='licenceno']").attr('readonly', true)
+            $("[name='tan']").attr('readonly', true)
+            $("[name='gstin']").attr('readonly', true)
+            $("[name='add1']").attr('readonly', true)
+            $("[name='add2']").attr('readonly', true)
+            $("[name='state']").attr('readonly', true)
+            $("[name='dist']").attr('readonly', true)
+            $("[type='file']").addClass('d-none');
+
+            $(".multiselect").addClass('d-none')
+
+            $(".save").text("Submit")
+            $("#hiddenmode").val("submit");
+            $(".fileadd").addClass('d-none');
+            let stateadd = []; let districtadd = []; let blockadd = [];
+
+            $(state?.split(',')).each(function (i, v) {
+                /*if ($(this).is(':checked')) {*/
+                    stateadd.push(data2?.find(e=>e.states_id==v)?.states_name);
+               //}
+                //$(this).prop('checked', false).trigger('change')
+            });
+            $(".statelist").text(state == "all" ? "All Selected"  :stateadd.join(','))
+
+            
+          
+            districtadd = [];
+            blockadd=[]
+            $(districtids?.split(',')).each(function (i, v) {
+               // if ($(this).is(':checked')) {
+                districtadd.push(alldistrict?.find(e => e.districts_id == v)?.districts_name);
+               // }
+                //$(this).prop('checked', false).trigger('change')
+            });
+            $(".districtlist").text(districtids=="all"?"All Selected":districtadd.join(','))
+            
+            $(blockids1?.split(',')).each(function (i, v) {
+                //if ($(this).is(':checked')) {
+                blockadd.push(allblocks?.find(e => e.blocks_id == v)?.blocks_name);
+               // }
+                //$(this).prop('checked', false).trigger('change')
+            });
+            
+            $("#servicestate_id").addClass("d-none")
+            $("#servicedistrict_id").addClass("d-none")
+            $("#serviceblock_id").addClass("d-none")
+            $(".blocklist").text(blockadd.join(','))
+            //let mode ="@ViewData["mode"]" ;
+            fileshow();
+            $("[name='email']").attr('readonly', true)
+            $("[name='mobile']").attr('readonly', true)
+
+            $(".reset").addClass('d-none')
+            $("#invalidCheck2").prop('required', true)
+            $(".edit,.submit,.cancel,.invalidecheck").removeClass('d-none')
+        }
+        $(document).on("click", ".edit", function () {
+            enablevalues();
+            //$('.reset').trigger('click')
+        })
+        $(document).on("click", ".cancel", function () {
+            enablevalues();
+            $('.reset').trigger('click')
+
+          
+        })
+        function enablevalues() {
+            $("[name='companyname']").attr('readonly', false)
+            $("[name='companytype']").attr('readonly', false)
+            $("#iisstate").attr('readonly', false)
+            $("#servicestate_id").removeClass("d-none")
+            $("#servicedistrict_id").removeClass("d-none")
+            $("#serviceblock_id").removeClass("d-none")
+            $("#iisstate").removeClass("d-none")
+            $(".multiselect").removeClass('d-none')
+
+            $(".statelist").addClass('d-none')
+            $(".districtlist").addClass('d-none')
+            $(".blocklist").addClass('d-none')
+            //$(".panfile").addClass('d-none')
+            //$(".dotfile").addClass('d-none')
+            //$(".gstinfile").addClass('d-none')
+            //$(".poafile").addClass('d-none')
+            //$(".poifile").addClass('d-none')
+            //$(".compdoc").addClass('d-none')
+            //$(".aadharfile").addClass('d-none')
+            $(".save").text("Save")
+            $(".fileadd").removeClass('d-none');
+            $(".aggrementfile").addClass('d-none')
+            $("[name='signaturename']").attr('readonly', false)
+            $("[name='authorisedaadhar']").attr('readonly', false)
+            $("[name='pan']").attr('readonly', false)
+            $("[name='licenceno']").attr('readonly', false)
+            $("[name='tan']").attr('readonly', false)
+            $("[name='gstin']").attr('readonly', false)
+            $("[name='add1']").attr('readonly', false)
+            $("[name='add2']").attr('readonly', false)
+            $("[name='state']").attr('readonly', false)
+            $("[name='dist']").attr('readonly', false)
+            //$("[type='file']").addClass('d-none');
+            $("[type='file']").addClass('d-none');
+            $("[name='email']").attr('readonly', false)
+            $("[name='mobile']").attr('readonly', false)
+            fileshow();
+            $("#hiddenmode").val("save");
+            $(".reset").removeClass('d-none')
+            $("#invalidCheck2").prop('required', false)
+            $(".edit,.submit,.cancel,.invalidecheck").addClass('d-none')
+        }
+        $('#comp_type').change(function (event) {
+            $('.spanmand').empty();
+            $('.spanmand').append(`*`);
+            var type = this.value;
+            if (type == "NONE") {
+
+                $('.spanmand').empty();
+            }
+        })
+        $(document).on('change', '#state_id', function () {
+
+            getdistrict1($(this).val())
+        })
+
+
+        //$("#hiddenmode").val('submit')
+        $("#servicestate_id").empty();
+        $("#servicestate_id").multiselect('destroy');
+        $("#servicedistrict_id").multiselect();
+        $("#serviceblock_id").multiselect();
+        var data2 = JSON.parse(JSON.stringify(@Html.Raw(Json.Serialize(ViewData["servicestateList"]))));
+        console.log(data2)// [{ "DISTRICT_ID": "22", "USERID": "sss" }, { "DISTRICT_ID": "22", "USERID": "sss" }]
+        var option = "";
+        $.each(data2, function (index, element) {
+            $('#servicestate_id').append($('<option></option>').attr("data-User-id", element.states_id).val(element.states_id).html(element.states_name));
+            //option += '<option data-User-id=' + element.USERID + '  value=' + element.DISTRICT_ID + '>' + element.DISTRICT_NAME + '</option>'
+        });
+        //  $('#dropdownuser23').append(option)
+        $('#servicestate_id').multiselect({
+            includeSelectAllOption: true,
+            maxHeight: 300,
+            numberDisplayed:1
+        });
+        var alldistrict = await getdistrict();
+        var allblocks = await getdistrictblock(1);
+        console.log(alldistrict)
+
+        var state = "@ViewData["state"]";
+        var districtids = "@ViewData["district"]";
+        var blockids = "@ViewData["block"]";
+        var blockids1 = "@ViewData["block"]";
+        setTimeout(() => {
+            $('.card-wrapper').removeClass('d-none')
+            $('.loader').addClass('d-none')
+        },1000)
+        //$.when(function1()).then(function2());
+
+        //state auto set
+        if (state != "" && state !="all") {
+            st = state?.split(',');
+           
+            for (let r = 0; r <= st.length - 1; r++) {
+                setTimeout(async () => {
+                    $(".dropdown-menu:eq(0)").find("input[value='" + st[r] + "']").prop('checked', true).trigger('change', ["state"]);
+                },10)
+              
+            }
+        }
+        if (state == "all") {
+            $(".dropdown-menu:eq(0)").find("input[value='multiselect-all']").prop('checked', true).trigger('change', ["state"])
+        }
+
+     
+        
+        //state dropdown
+        var stateid = [], districtid = [], blockids = [];
+        $(document).on('change', ".dropdown-menu:eq(0) input[type='checkbox']", async function (event,data2) {
+           
+            var activeuser = $('.dropdown-menu:eq(0) .active').length;
+           
+            stateid = [];
+            $("#serviceblock_id").empty();
+            $("#serviceblock_id").multiselect('destroy');
+            $("#serviceblock_id").multiselect();
+            $("#servicedistrict_id").empty();
+            $("#servicedistrict_id").multiselect('destroy');
+            // $("#servicedistrict_id").multiselect();
+           
+            $("#hiddendistrict_id").val('');
+            $("#hiddenblock_id").val('');
+            itemdata = []; var listsend = null; districtdata = []; stateid = [];
+
+            var tt = "";
+            for (var ee = 0; ee <= activeuser - 1; ee++) {
+
+                if ($('.dropdown-menu:eq(0) .active:eq(' + ee + ')').find('input').val() == "multiselect-all") {
+
+                    $("#servicedistrict_id").multiselect('destroy');
+                    $("#hiddenstate_id").val('all');
+                    tt = "all";
+
+                }
+                else {
+
+                    if (tt != 'all') {
+                        stateid.push($('.dropdown-menu:eq(0) .active:eq(' + ee + ')').find('input').val(),
+                        );
+                        $("#hiddenstate_id").val('');
+                        $("#hiddenstate_id").val($.unique(stateid).join(','));
+
+                                  }
+                }
+            }
+                 
+                   // console.log(itemdata, districtdata)
+
+
+            if ($.unique(stateid).length == activeuser) {
+                $('#servicedistrict_id').empty();
+                $("#servicedistrict_id").multiselect('destroy');
+                $.each(alldistrict.filter(r => $.unique(stateid).includes(r.states_id)), function (index, element) {
+                    $('#servicedistrict_id').append($('<option></option>').attr("data-User-id", element.districts_id).val(element.districts_id).html(element.districts_name));
+                    //option += '<option data-User-id=' + element.USERID + '  value=' + element.DISTRICT_ID + '>' + element.DISTRICT_NAME + '</option>'
+                });
+
+
+                if (districtids != "" && districtids != "all") {
+
+
+                    let st1 = districtids?.split(',');
+
+                    for (let r = 0; r <= st1.length - 1; r++) {
+                        //let y = $(".dropdown-menu:eq(0)");
+                        setTimeout(async () => {
+                            $(".dropdown-menu:eq(1)").find("input[value='" + st1[r] + "']").prop('checked', true).trigger('change', ["district"]);
+                        }, 3)
+                    }
+                }
+                setTimeout(async () => {
+                    if (districtids == "all") {
+                        $(".dropdown-menu:eq(1)").find("input[value='multiselect-all']").prop('checked', true).trigger('change', ["district"])
+                    }
+                }, 10)
+            }
+
+
+                $('#servicedistrict_id').multiselect({
+                    includeSelectAllOption: true,
+                    resetText: 'Reset',
+
+                    maxHeight: 300,
+                    numberDisplayed: 1
+
+
+
+                });
+            
+        });
+
+        $(document).on('change', ".dropdown-menu:eq(2) input[type='checkbox']", async function (event,data2) {
+
+            var activeuser = $('.dropdown-menu:eq(2) .active').length;
+            itemdata = []; var listsend = null; var blockid = []
+            if (blockids1?.split(',').length == activeuser||data2!="" || blockids1=="")
+            for (var ee = 0; ee <= activeuser - 1; ee++) {
+                if ($('.dropdown-menu:eq(2) .active:eq(' + ee + ')').find('input').val() == "multiselect-all") {
+                    //$("#servicedistrict_id").multiselect('destroy');
+                }
+                else {
+
+                    listsend = {
+                        STATE_ID: $('.dropdown-menu:eq(2) .active:eq(' + ee + ')').find('input').val(),
+                    }
+                    blockid.push(listsend?.STATE_ID);
+                    $("#hiddenblock_id").val('');
+                    $("#hiddenblock_id").val(blockid.join(','));
+                }
+            }
+        });
+
+      
+
+        $(document).on('change', ".dropdown-menu:eq(1) input[type='checkbox']", async function (event,data2) {
+
+            await (async () => {
+                var activeuser = $('.dropdown-menu:eq(1) .active').length;
+
+                $("#serviceblock_id").empty();
+                $("#serviceblock_id").multiselect('destroy');
+                $("#hiddenblock_id").val('');
+                // $("#servicedistrict_id").multiselect();
+
+                itemdata = []; var listsend = null; districtdata = []; var districtid = []; distictdis = [];
+                var tt = "";
+                if (districtids?.split(',').length == activeuser ||data2!=""|| districtids == "all" || districtids == "") {
+                    for (var ee = 0; ee <= activeuser - 1; ee++) {
+                        if ($('.dropdown-menu:eq(1) .active:eq(' + ee + ')').find('input').val() == "multiselect-all") {
+                            $("#serviceblock_id").multiselect('destroy');
+                            $("#hiddendistrict_id").val('all');
+                            tt = "all";
+                        }
+                        else {
+
+
+                            if (tt != 'all') {
+                                districtid.push($('.dropdown-menu:eq(1) .active:eq(' + ee + ')').find('input').val());
+
+                                $("#hiddendistrict_id").val('');
+                                $("#hiddendistrict_id").val($.unique(districtid).join(','));
+                                itemdata.push(listsend);
+
+                            }
+                        }
+                    }
+
+                }
+                districtdata = [...allblocks.filter(r => $.unique(districtid).includes(r.districts_id))];
+
+                    console.log(itemdata, districtdata)
+
+
+                if ($.unique(districtid).length == activeuser) {
+                        $("#serviceblock_id").empty();
+                        $("#serviceblock_id").multiselect('destroy');
+                        $.each(districtdata, function (index, element) {
+                            $('#serviceblock_id').append($('<option></option>').attr("data-User-id", element.blocks_id).val(element.blocks_id).html(element.blocks_name));
+                            //option += '<option data-User-id=' + element.USERID + '  value=' + element.DISTRICT_ID + '>' + element.DISTRICT_NAME + '</option>'
+                        });
+
+                    if (blockids1 != "" && districtids?.split(',').length == activeuser ) {
+
+                            let st2 = blockids1?.split(',');
+
+                            for (let r = 0; r <= st2.length - 1; r++) {
+                                //let y = $(".dropdown-menu:eq(0)");
+                                setTimeout(async () => {
+                                $(".dropdown-menu:eq(2)").find("input[value='" + st2[r] + "']").prop('checked', true).trigger('change',['block']);
+                                    console.log("blocks")
+                                }, 10)
+
+                            }
+
+                        }
+                        //  $('#dropdownuser23').append(option)
+
+                    }
+                
+
+                $('#serviceblock_id').multiselect({
+                    includeSelectAllOption: true,
+                    resetText: 'Reset',
+                    maxHeight: 300,
+                    numberDisplayed: 1
+
+
+
+                });
+            }
+
+            )();
+
+
+        });
+
+
+        //
+
+        // $('#state_id,#servicestate_id').change(function (event) {
+        async function getdistrict() {
+            var stateid = "";
+            var currentid = this.id;
+            let data = null;
+            const result = await $.ajax({
+                url: "/Details/getalldistrict",
+                type: "post",
+                contentType: 'application/x-www-form-urlencoded',
+                async: false,
+                success: function (result) {
+                    var obj = JSON.parse(result)
+
+                    var data2 = JSON.parse(JSON.stringify(obj));//[{ "DISTRICT_ID": "22", "USERID": "sss" }, { "DISTRICT_ID": "22", "USERID": "sss" }]
+                    console.log(data2)
+                    data = data2?.distModels
+                    //"@ViewData["servicedistList"]";
+
+
+                
+
+                },
+                error: function () {
+                    alert("Error occured!!")
+                }
+            });
+            return data;
+
+        }
+
+        // $('#servicedist_id').change(function (event) {
+        async function getdistrictblock() {
+          
+
+            let data = null;
+            const result = await $.ajax({
+                url: "/Details/getallblock",
+                type: "post",
+                contentType: 'application/x-www-form-urlencoded',
+
+                success: function (result) {
+                    var obj = JSON.parse(result)
+
+                    var data2 = JSON.parse(JSON.stringify(obj));//[{ "DISTRICT_ID": "22", "USERID": "sss" }, { "DISTRICT_ID": "22", "USERID": "sss" }]
+                    console.log(data2)
+                    data = data2?.blockModels;
+                    //"@ViewData["servicedistList"]";
+                    var option = "";
+                    //$.each(data2, function (index, element) {
+                    //    $('#servicedistrict_id').append($('<option></option>').attr("data-User-id", element.districts_id).val(element.districts_name).html(element.districts_name));
+                    //    //option += '<option data-User-id=' + element.USERID + '  value=' + element.DISTRICT_ID + '>' + element.DISTRICT_NAME + '</option>'
+                    //});
+                    ////  $('#dropdownuser23').append(option)
+                    //$('#servicedistrict_id').multiselect({
+                    //    includeSelectAllOption: true
+                    //});
+                    //$('#serviceblock_id').empty();
+                    //$('#servicegp_id').empty();
+                    //// $('#gp_download').empty();
+                    //$('#serviceblock_id').append(`<option value="">${"--Select--"}</option>`);
+                    //$('#servicegp_id').append(`<option value="">${"--Select--"}</option>`);
+                    //$.each(obj.blockModels, function (key, value) {
+
+                    //    $('#serviceblock_id').append(`<option  value="${value.blocks_id}">${value.blocks_name}</option>`);
+
+                    //});
+                },
+                error: function () {
+                    alert("Error occured!!")
+                }
+            });
+            return data;
+        }
+
+        //$('#serviceblock_id').change(function (event) {
+        async function getblock(value) {
+            var block = value;//.split;(" _ ");
+
+
+            const result = await $.ajax({
+                url: "/Details/getgpwrtblock/" + block,
+                type: "post",
+                contentType: 'application/x-www-form-urlencoded',
+                data: { block: block, type: "gp" },
+                success: function (result) {
+                    var obj = JSON.parse(result)
+                    $('#servicegp_id').empty();
+                    // $('#gp_download').empty();
+
+                    //$('#gp_download').append(`<a href="/gpuser/exportgp/${block}"> Download GPs</a>`);
+                    $('#servicegp_id').append(`<option value="">${"--Select--"}</option>`);
+                    $.each(obj.gpModels, function (key, value) {
+                        $('#servicegp_id').append(`<option  value="${value.gp_id}">${value.gp_name}</option>`);
+
+
+                    });
+
+                },
+                error: function () {
+                    alert("Error occured!!")
+                }
+            });
+
+        }
+
+
+        function getdistrict1(value) {
+            var stateid = value;//.split;(" _ ");
+
+            $.ajax({
+                url: "/Details/getdistrict/" + stateid,
+                type: "post",
+                contentType: 'application/x-www-form-urlencoded',
+                async: false,
+                success: function (result) {
+                    var obj = JSON.parse(result)
+
+
+
+
+                    $('#dist_id').empty();
+
+                    $('#dist_id').append(`<option value="">${"--Select--"}</option>`);
+                    $.each(obj.distModels, function (key, value) {
+
+                        $('#dist_id').append(`<option  value="${value.districts_id}">${value.districts_name}</option>`);
+
+                    });
+                }
+            });
+        }
+
+         let mode ="@ViewData["mode"]" ;
+        console.log(mode)
+        if (mode == "validate") {
+            setTimeout(() => { diabledvalue(); }, 1500)
+            setTimeout(() => { diabledvalue(); }, 4000)
+            //setTimeout(() => { diabledvalue(); },1500)
+        }
+
+        if (mode != "") { fileshow(); }
+
+    });
+
+</script>
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Registration Form</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+
+                            <li class="breadcrumb-item active" aria-current="page">Registration Form</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    @*<a href="#" class="btn btn-sm btn-neutral">New</a>
+                        <a href="#" class="btn btn-sm btn-neutral">Filters</a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="loader d-none"></div>
+            <div class="card-wrapper d-none">
+
+                <form asp-action="form" enctype="multipart/form-data">
+                    <div class="card">
+                        <!-- Card header -->
+                        <div class="card-header">
+                            <h3 class="mb-0">Service Provider Details</h3>
+                        </div>
+                        <!-- Card body -->
+                        <div class="card-body">
+
+
+
+
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">Name of the Service Provider <span class="red-color">*</span> </label>
+                                        <input asp-for="companyname"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="Name of the Service Provider" />
+                                        <span asp-validation-for="companyname" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault01">Type of Service Provider<span class="red-color">*</span></label>
+                                        <select class=" form-control" id="comp_type" asp-for="companytype">
+                                            <option value="">--Select--</option>
+                                            <option value="TSP"> TSP </option>
+                                            <option value="ISP"> ISP</option>
+                                            <option value="IPVNO"> IPVNO </option>
+                                            <option value="NONE"> NONE </option>
+                                        </select>
+                                        <span asp-validation-for="companytype" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">Name of Authorized Signatory <span class="red-color">*</span></label>
+                                        <input asp-for="signaturename"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="Name of Authorized Signatory" />
+                                        <span asp-validation-for="signaturename" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">Aadhaar Number of Authorized Signatory <span class="red-color">*</span></label>
+                                        <input asp-for="authorisedaadhar"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="Aadhaar Number of Authorized Signatory" />
+                                        <span asp-validation-for="authorisedaadhar" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">PAN <span class="red-color">*</span></label>
+                                        <input asp-for="pan"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="PAN" />
+                                        <span asp-validation-for="pan" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">Authorized License No  <span class="red-color spanmand"></span></label>
+                                        <input asp-for="licenceno"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="Authorized License No" />
+                                        <span asp-validation-for="licenceno" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">TAN <span class="red-color spanmand"></span></label>
+                                        <input asp-for="tan"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="TAN" />
+                                        <span asp-validation-for="tan" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">GSTIN/UTS NO.<span class="red-color spanmand"></span></label>
+                                        <input asp-for="gstin"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="GSTIN" />
+                                        <span asp-validation-for="gstin" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            @*<div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">PAN File</label>
+                                    <input asp-for="panfile">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">AOA/MOA File</label>
+                                    <input asp-for="aoafile">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">DoT/I&B/LCO Licence No</label>
+                                    <input asp-for="poafile">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">GSTIN File</label>
+                                    <input asp-for="gstinfile">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">POA File</label>
+                                    <input asp-for="poafile">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">POI File</label>
+                                    <input asp-for="poifile">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">Legal Status of Company Document</label>
+                                    <input asp-for="compdoc">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">Any Agreement</label>
+                                    <input asp-for="aggrementfile">
+                                </div>
+                            </div>
+                        </div>*@
+
+
+
+
+
+                            @*<div class="form-group">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input class="custom-control-input"
+                                       id="invalidCheck2"
+                                       type="checkbox"
+                                       value=""
+                                        />
+                                <label class="custom-control-label" for="invalidCheck2">Agree to terms and conditions <span class="red-color">*</span></label>
+                                <div class="invalid-feedback">
+                                    You must agree before submitting.
+                                </div>
+                            </div>
+                        </div>*@
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card">
+                        <!-- Card header -->
+                        <div class="card-header">
+                            <h3 class="mb-0">Upload File</h3>
+                        </div>
+                        <!-- Card body -->
+                        <div class="card-body">
+
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">PAN</label>
+                                        <input type="file" class="d-none" />
+                                        <input type="hidden" asp-for="panfile" />
+                                        <button class="fileadd btn btn-primary" type="button" data-folder="PAN">Upload</button>
+                                        <p class="badge badge-warning  panfile"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">Aadhar</label>
+                                        <input class="d-none" type="file">
+                                        <input type="hidden" asp-for="aadharfile" />
+                                        <button class="fileadd btn btn-primary" type="button" data-folder="aadhar">Upload</button>
+
+                                        <p class="badge badge-warning aadharfile"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">Licence</label>
+                                        <input class="d-none" type="file">
+                                        <input type="hidden" asp-for="dotfile" />
+                                        <button class="fileadd btn btn-primary" type="button" data-folder="DOT">Upload</button>
+
+                                        <p class="badge badge-warning dotfile"></p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">GSTIN</label>
+                                        <input class="d-none" type="file">
+                                        <input type="hidden" asp-for="gstinfile" />
+                                        <button class="fileadd btn btn-primary" type="button" data-folder="GSTIN">Upload</button>
+
+                                        <p class="badge badge-warning gstinfile"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">Company Incorporation Certificate</label>
+                                        <input class="d-none" type="file">
+                                        <input type="hidden" asp-for="compdoc" />
+                                        <button class="fileadd btn btn-primary" type="button" data-folder="COM">Upload</button>
+
+                                        <p class="badge badge-warning compdoc"></p>
+                                    </div>
+                                </div>
+                                @*<div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">POA File</label>
+                                    <input asp-for="poafile">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">POI File</label>
+                                    <input asp-for="poifile">
+                                </div>
+                            </div>*@
+                            </div>
+                            @*<div class="form-row">
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">Company Incorporation Certificate</label>
+                                    <input asp-for="compdoc">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="validationDefault03">Any Agreement</label>
+                                    <input asp-for="aggrementfile">
+                                </div>
+                            </div>
+                        </div>*@
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="card">
+                        <!-- Card header -->
+                        <div class="card-header">
+                            <h3 class="mb-0">Desired Service Locations as BBNL Associate</h3>
+                        </div>
+                        <!-- Card body -->
+                        <div class="card-body">
+                            <div class="form-row mb-5">
+                                <div class="col-md-6">
+                                    <label class="form-control-label" for="validationDefault04">Whether Internet Leased Line(ILL) required From BBNL </label>
+                                    <select id="iisstate" class="form-control" asp-for="iisstate">
+
+                                        <option value="">--Select--</option>
+                                        <option value="YES">YES</option>
+                                        <option value="NO">NO</option>
+                                    </select>
+                                 
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">State <span class="red-color">*</span></label>
+                                        @*<select class=" form-control" id="servicestate_id" asp-for="servicestate">
+                                        <option value="">--Select--</option>
+                                        @foreach (stateModel state in (List<stateModel>)ViewData["servicestateList"])
+                                        {
+                                            <option value="@state.states_id">@state.states_name</option>
+                                        }
+                                    </select>*@
+                                        <select id="servicestate_id" class="form-control w-100" multiple="multiple"></select>
+
+                                        <input type="hidden" asp-for="servicestate" id="hiddenstate_id" />
+                                        <p class="statelist"></p>
+                                        <span asp-validation-for="servicestate" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">District <span class="red-color">*</span></label>
+                                        @*<select class=" form-control" id="servicedist_id" asp-for="servicedist">
+                                        <option value="">--Select--</option>
+                                        @foreach (distModel dist in (List<distModel>)ViewData["servicedistList"])
+                                        {
+                                            <option value="@dist.districts_id">@dist.districts_name</option>
+                                        }
+                                    </select>*@
+                                        <select id="servicedistrict_id" class="form-control w-100" multiple="multiple"></select>
+
+                                        <input type="hidden" asp-for="servicedist" id="hiddendistrict_id" />
+                                        <p class="districtlist"></p>
+                                        <span asp-validation-for="servicedist" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">Block <span class="red-color">*</span></label>
+                                        @*<select class=" form-control" id="serviceblock_id" asp-for="serviceblock">
+                                        <option value="">--Select--</option>
+                                        @foreach (blockModel dist in (List<blockModel>)ViewData["serviceblockList"])
+                                        {
+                                            <option value="@dist.districts_id">@dist.districts_name</option>
+                                        }
+                                    </select>*@
+                                        <select id="serviceblock_id" class="form-control w-100" multiple="multiple"></select>
+                                        <input type="hidden" asp-for="serviceblock" id="hiddenblock_id" />
+                                        <p class="blocklist"></p>
+
+                                        <span asp-validation-for="serviceblock" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <div class="card">
+                        <!-- Card header -->
+                        <div class="card-header">
+                            <h3 class="mb-0">Basic Details</h3>
+                        </div>
+                        <!-- Card body -->
+                        <div class="card-body">
+
+
+
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">Address Line 1 <span class="red-color">*</span></label>
+                                        <input asp-for="add1"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="Company Address 1" />
+                                        <span asp-validation-for="add1" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">Address Line 2 <span class="red-color">*</span></label>
+                                        <input asp-for="add2"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="Company Address 2" />
+                                        <span asp-validation-for="add2" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">State <span class="red-color">*</span></label>
+                                        <select class=" form-control" id="state_id" asp-for="state">
+                                            <option value="">--Select--</option>
+                                            @foreach (stateModel state in (List<stateModel>)ViewData["stateList"])
+                                            {
+                                                <option value="@state.states_id">@state.states_name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="state" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault04">District <span class="red-color">*</span></label>
+                                        <select class=" form-control" id="dist_id" asp-for="dist">
+                                            <option value="">--Select--</option>
+                                            @foreach (distModel dist in (List<distModel>)ViewData["distList"])
+                                            {
+                                                <option value="@dist.districts_id">@dist.districts_name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="dist" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault01">Email Address  <span class="red-color">*</span></label>
+                                        <input asp-for="email"
+                                               class="form-control"
+                                               id="validationDefault01"
+                                               placeholder="Email Address" />
+                                        <span asp-validation-for="email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault02">Mobile Number <span class="red-color">*</span></label>
+                                        <input asp-for="mobile" maxlength="10"
+                                               class="form-control"
+                                               id="validationDefault02"
+                                               placeholder="Mobile Number" />
+                                        <span asp-validation-for="mobile" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+
+
+                            <div class="form-group invalidecheck d-none">
+                                <div class="custom-control custom-checkbox mb-3">
+                                    <input class="custom-control-input"
+                                           id="invalidCheck2"
+                                           type="checkbox"
+                                           value="" />
+                                    <label class="custom-control-label" for="invalidCheck2">Agree to terms and conditions</label>
+                                    <div class="invalid-feedback">
+                                        You must agree before submitting.
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-danger">@TempData["error"]</p>
+                            <input type="hidden" asp-for="mode" id="hiddenmode" value="save" />
+
+                            <button class="btn btn-primary save" type="submit">Save</button>
+                            <button class="btn btn-primary reset" type="button" >Reset</button>
+                            <button class="btn btn-primary edit d-none" type="button">Edit</button>
+                            @*<button class="btn btn-primary submit d-none" type="submit">Submit</button>*@
+                            <button class="btn btn-primary cancel d-none" type="button">Cancel</button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card" id="otpdiv" style="display:none">
+                        <!-- Card header -->
+                        <div class="card-header">
+                            <h3 class="mb-0">OTP</h3>
+                        </div>
+                        <!-- Card body -->
+                        <div class="card-body">
+
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="validationDefault03">Enter OTP </label>
+                                        <input asp-for="licenceno"
+                                               class="form-control"
+                                               id="validationDefault03"
+                                               placeholder="OTP" />
+                                        <span asp-validation-for="licenceno" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

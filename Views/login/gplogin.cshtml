@@ -1,0 +1,77 @@
+﻿@model bbnl.Models.loginmodel
+@{
+    ViewData["Title"] = "Login";
+  // Layout = "../Shared/_gpLayout.cshtml";
+}
+
+<div class="main-content">
+    <!-- Header -->
+    <div class="header bg-primary  pb-7 h-76vh">
+        <div class="container">
+            <div class="header-body">
+                <form asp-action="gplogin" asp-controller="login" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <!-- Card header -->
+                                <div class="card-header">
+                                    <h3 class="mb-0">GP Login</h3>
+                                </div>
+                                <!-- Card body -->
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="validationDefault03">UserId <span class="red-color">*</span> </label>
+                                                <input asp-for="UserId"
+                                                       class="form-control"
+                                                       id="validationDefault03"
+                                                       placeholder="Enter UserId" />
+                                                <span asp-validation-for="UserId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="validationDefault03">Password <span class="red-color">*</span> </label>
+                                                <input asp-for="Password" type="password"
+                                                       class="form-control"
+                                                       id="validationDefault03"
+                                                       placeholder="Enter Password" />
+                                                <span asp-validation-for="Password" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <img alt="Captcha" src=@Url.Action("Captcha") />
+                                                    <input asp-for="Captcha"
+                                                           class="form-control"
+                                                           id="validationDefault03"
+                                                           placeholder="Enter the above text" />
+                                                    <span asp-validation-for="Captcha" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Login</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
