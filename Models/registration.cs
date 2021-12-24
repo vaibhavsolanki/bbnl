@@ -78,7 +78,9 @@ namespace bbnl.Models
         public string state { get; set; }
         [Required(ErrorMessage = "select District")]
         public string dist { get; set; }
-      
+
+        public string statename { get; set; }
+        public string distname { get; set; }
         //public string servicestate { get; set; }
         //[Required(ErrorMessage = "select District")]
         //public string servicedist { get; set; }
@@ -156,6 +158,9 @@ namespace bbnl.Models
         public string state { get; set; }
         [Required(ErrorMessage = "select District")]
         public string dist { get; set; }
+
+        public string statename { get; set; }
+        public string distname { get; set; }
         public string servicegp { get; set; }
         [Required(ErrorMessage = "select State")]
         public string servicestate { get; set; }
@@ -189,6 +194,7 @@ namespace bbnl.Models
         public string pan { get; set; }
         public string gstin { get; set; }
         public string tan { get; set; }
+        public string date { get; set; }
         public string authorisedaadhar { get; set; }
 
     }
@@ -283,11 +289,17 @@ namespace bbnl.Models
         public string gp_count { get; set; }
         public string gpup_count { get; set; }
         public string gpdown_count { get; set; }
+        public string gpnoser_count { get; set; }
+
 
 
     }
 
-
+    public class pdfdetails
+    {
+       public string district { get; set; }
+        public string state { get; set; }
+    }
     public enum gpEnum
     {
         DOWN = 1,

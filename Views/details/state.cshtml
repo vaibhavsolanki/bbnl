@@ -27,6 +27,7 @@
                 $('.blockcount').empty();
                 $('.gpcount').empty();
                 $('.upgp').empty();
+                $('.gpnoser').empty();
                 $('.downgp').empty();
 
              //   $('.statecount').append(obj[0].state_count);
@@ -34,6 +35,8 @@
                 $('.blockcount').append(obj[0].block_count);
                 $('.gpcount').append(obj[0].gp_count);
                 $('#upgp').append(obj[0].gpup_count);
+                $('#gpnoser').append(obj[0].gpno_ser);
+                
                 $('#downgp').append(obj[0].gpdown_count);
 
 
@@ -100,7 +103,7 @@
                     $('.gpcount').empty();
                     $('#upgp').empty();
                     $('#downgp').empty();
-
+                    $("#gpnoser").empty();
                     //   $('.statecount').append(obj[0].state_count);
                     $('.distdiv').css("display", "none");
                     $('.blockdiv').css("display", "block");
@@ -108,6 +111,9 @@
                     $('.gpcount').append(obj.countmodel.gp_count);
                     $('#upgp').append(obj.countmodel.gpup_count);
                     $('#downgp').append(obj.countmodel.gpdown_count);
+                   // $('#gpnoser').append("1");
+                   // alert(obj.countmodel.gpnoser_count)
+                    $('#gpnoser').append(obj.countmodel.gpnoser_count);
                     $('#block_id').append(`<option value="">${"--Select--"}</option>`);
                     $.each(obj.blockModels, function (key, value) {
 
@@ -138,6 +144,7 @@
                     $('.gpcount').empty();
                     $('#upgp').empty();
                     $('#downgp').empty();
+                    $("#gpnoser").empty();
                     $('.blockdiv').css("display", "none");
 
 
@@ -146,16 +153,21 @@
                     var downgp = $.grep(obj.gpModels, function (v) {
                         return v.up_status == "1";
                     });
-
-
+                    var upgp = $.grep(obj.gpModels, function (v) {
+                        return v.up_status == "0";
+                    });
+                    var noser = $.grep(obj.gpModels, function (v) {
+                        return v.up_status == "2";
+                    });
+                    console.log(obj.gpModels)
                     $('.gpcount').append(obj.gpModels.length);
 
-                    $('#upgp').append(obj.gpModels.length - downgp.length);
+                    $('#upgp').append(upgp.length);
                     $('#downgp').append(downgp.length);
-
+                    $("#gpnoser").append(noser.length)
                     $.each(obj.gpModels, function (key, value) {
                         //if (value.up_status == "1") {
-                        $('#gpdata').append(`<tr style="color:${value.up_status == "1" ? "red" : "green"}"> <td>${key + 1}</td> <td>${value.states_name ?? ""}</td> <td>${value.districts_name ?? ""}</td> <td>${value.blocks_name ?? ""}</td> <td>${value.gp_name ?? ""}</td> <td>${value.up_status == "1"?"DOWN":"UP"} <td>${value.down_resion ?? "NA"}</td> </tr>`);
+                        $('#gpdata').append(`<tr style="color:${value.up_status == "1" ? "red" : (value.up_status == "0" ? "green" : "orange")}"> <td>${key + 1}</td> <td>${value.states_name ?? ""}</td> <td>${value.districts_name ?? ""}</td> <td>${value.blocks_name ?? ""}</td> <td>${value.gp_name ?? ""}</td> <td>${value.up_status == "1" ? "DOWN" : (value.up_status == "0" ? "UP" : "Service Not Available")} <td>${ ((value.up_status == "0" || value.up_status == "2")?"":value.down_resion)}</td> </tr>`);
                         //}
                         //else {
                         //    $('#gpdata').append(`<p style="color:green" onclick="getvillage(${value.gp_id ?? ""})" id="gp${value.gp_id ?? ""}" class="district-list">${value.gp_name ?? ""}</p>`);
@@ -264,7 +276,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">GP (<span class="text-success" id="upgp"></span>/<span class="text-danger" id="downgp"></span>)</h5>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">GP (<span class="text-success" id="upgp"></span>/<span class="text-danger" id="downgp"></span>/<span style="color:orange"  id="gpnoser"></span>)</h5>
                                     <span class="h2 font-weight-bold mb-0 gpcount">Loading...</span>
                                 </div>
                                 <div class="col-auto">

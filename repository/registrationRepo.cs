@@ -146,10 +146,48 @@ namespace bbnl.repository
             conn.Close();
             return 1;
         }
+        public (string,string)  registerdata(string regno)
+        {
+            
+            try
+            {
+                using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+                {
+                    // string storedprocname = "BBNLSoftware_SP_GenerateInvoice";
+                    // var currentfinYear = getfinancialYer();
 
+                    //string query = "select * from bbnl_tbl where regno='"+regno+"'";
+
+                    NpgsqlCommand cmd = new NpgsqlCommand("getregdata", conn);
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+                     cmd.Parameters.AddWithValue("p_regno", regno);
+                    //cmd.Parameters.AddWithValue("p_district", 1);
+
+                   // cmd.CommandType = CommandType.Text;
+
+                    //  cmd1.CommandTimeout = 0;
+
+                    conn.Open();
+
+                    DataTable dt = new DataTable();
+                    NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
+                    da.Fill(dt);
+                    return (dt.Rows[0][0].ToString(),dt.Rows[0][0].ToString());
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+           // return ret;
+            return ("","");
+        }
 
         public string insertreg(registrationmodelwithoutfile model)
         {
+            model.date = DateTime.Now.ToString("dd-MM-yyyy");
             string query = "insert into bbnl_tbl (regno, " +
                 "companyname, " +
                 "add1, " +
@@ -199,9 +237,9 @@ namespace bbnl.repository
             NpgsqlConnection conn = new NpgsqlConnection(connectionString);
             NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
             cmd.CommandType = CommandType.Text;
-            int MaxId = GetMaxId();
-            var maxregno = MaxId.ToString("D7");
-            model.regno = maxregno;
+            string MaxId = GetMaxIdState(model.state,model.dist);
+            var maxregno = MaxId;//MaxId.ToString("D7");
+            model.regno = MaxId;
             cmd.Parameters.AddWithValue("@regno", maxregno);
 
             cmd.Parameters.AddWithValue("@companyname", DbNullIfNull(model.companyname));
@@ -241,7 +279,7 @@ namespace bbnl.repository
             conn.Open();
             int z = cmd.ExecuteNonQuery();
             conn.Close();
-            
+         // (model.state,model.dist) =registerdata(model.regno);
             return JsonConvert.SerializeObject(model);
         }
 
@@ -275,9 +313,46 @@ namespace bbnl.repository
         {
             return string.IsNullOrEmpty(Convert.ToString(obj)) ? DBNull.Value : obj;
         }
+        public string GetMaxIdState(string state,string district)
+        {
+            string ret = "";
+            try
+            {
+                using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+                {
+                    // string storedprocname = "BBNLSoftware_SP_GenerateInvoice";
+                    // var currentfinYear = getfinancialYer();
+
+                    //string query = "select max(id) from bbnl_tbl";
+
+                    NpgsqlCommand cmd = new NpgsqlCommand("genmaxid", conn);
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    // cmd.Parameters.AddWithValue("p_callval", 1);
+
+                    cmd.Parameters.AddWithValue("p_state",state);
+                    cmd.Parameters.AddWithValue("p_district",district);
+
+                    //  cmd1.CommandTimeout = 0;
+
+                    conn.Open();
+
+                    DataTable dt = new DataTable();
+                    NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
+                    da.Fill(dt);
+                    ret = dt.Rows[0][0].ToString();
+
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+                return ret;
+        }
 
 
-        public int GetMaxId()
+            public int GetMaxId()
         {
 
 

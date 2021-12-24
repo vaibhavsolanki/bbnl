@@ -1252,3 +1252,17 @@ E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\bbnl.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\ref\bbnl.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\bbnl.pdb
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\bbnl.genruntimeconfig.cache
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.barcodes.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.forms.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.io.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.kernel.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.layout.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.pdfa.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.sign.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.styledxmlparser.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.svg.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.commons.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\itext.html2pdf.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\MailKit.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\bin\Release\net5.0\MimeKit.dll

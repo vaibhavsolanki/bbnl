@@ -155,7 +155,9 @@ namespace bbnl.repository
             NpgsqlConnection conn = new NpgsqlConnection(connectionString);
             string query = "select count (*) as state_count , ( select count (*)  from " +'"'+"Districts"+'"'+") as districts_count, " +
                 "(select count(*)  from sta_dis_blk_new) as block_count,(select count(*)  from gp_table) as gp_count, " +
-                "( select count (*)  from gp_table where up_status=0 or up_status is null) as gpup_count, " +
+                "( select count (*)  from gp_table where up_status=0) as gpup_count, " +
+                 "( select count (*)  from gp_table where up_status=2) as gpno_ser, " +
+                
                 "( select count (*)  from gp_table where up_status=1) as gpdown_count from " + '"'+"States"+'"';
             NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
             DataTable dt = new DataTable();
@@ -170,7 +172,8 @@ namespace bbnl.repository
             NpgsqlConnection conn = new NpgsqlConnection(connectionString);
             string query = "select count(*) as districts_count, (select count(*) from sta_dis_blk_new where states_id='" + stateid+"') as block_count, " +
                 "(select count(*)  from gp_table where states_id='" + stateid + "') as gp_count, " +
-                "(select count (*)  from gp_table where (up_status=0 or up_status is null) and states_id='" + stateid + "') as gpup_count, " +
+                "(select count (*)  from gp_table where up_status=0 and states_id='" + stateid + "') as gpup_count, " +
+                   "(select count (*)  from gp_table where up_status=2 and states_id='" + stateid + "') as gpno_ser, " +
                 "( select count (*)  from gp_table where up_status=1 and states_id='" + stateid + "') as gpdown_count from " + '"'+"Districts"+'"'+ " where states_id = '" + stateid + "'";
             NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
             DataTable dt = new DataTable();
@@ -183,7 +186,8 @@ namespace bbnl.repository
         public string countwrtdist(string distid)
         {
             NpgsqlConnection conn = new NpgsqlConnection(connectionString);
-            string query = "select count(*)   as gp_count, (select count (*)  from gp_table where (up_status=0 or up_status is null) and districts_id='"+distid+"') as gpup_count, " +
+            string query = "select count(*)   as gp_count, (select count (*)  from gp_table where (up_status=0) and districts_id='"+distid+"') as gpup_count, " +
+                "(select count(*)  from gp_table where (up_status = 2) and districts_id = '"+distid+"') as gpnoser_count, " +
                 "( select count (*)  from gp_table where up_status=1 and districts_id='" + distid + "') as gpdown_count from gp_table where districts_id = '" + distid + "'";
             NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
             DataTable dt = new DataTable();

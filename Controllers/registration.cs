@@ -22,6 +22,10 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.html.simpleparser;
 using System.Text;
 using System.Web.UI;
+using System.Text.RegularExpressions;
+using iText.Html2pdf;
+using MimeKit;
+using MailKit.Security;
 
 namespace bbnl.Controllers
 {
@@ -36,6 +40,7 @@ namespace bbnl.Controllers
         private readonly string _alias;
         private readonly string _username;
         private readonly string _bcc;
+        private readonly string _to;
         private readonly string _ssl;
         private readonly string _defaultcred;
 
@@ -48,6 +53,7 @@ namespace bbnl.Controllers
             {
                 _host = smtpSection.GetSection("Host").Value;
                 _from = smtpSection.GetSection("From").Value;
+                _to = smtpSection.GetSection("To").Value;
                 _pwd = smtpSection.GetSection("Password").Value;
                 _port = smtpSection.GetSection("PORT").Value;
                 _alias = smtpSection.GetSection("Alias").Value;
@@ -272,6 +278,35 @@ namespace bbnl.Controllers
                 otp += tempval;
             }
             HttpContext.Session.SetString("sendOTP", otp);
+            //try
+            //{
+            //    MimeMessage message = new MimeMessage();
+            //    message.From.Add(new MailboxAddress("BBNL", _from));
+            //    message.To.Add(MailboxAddress.Parse(email));
+            //    message.Subject = "BBNL-OTP";
+            //    //message.Body = emailModel.Message;
+            //    // message.Subject = emailModel.Subject;
+            //    var builder = new BodyBuilder();
+            //    builder.HtmlBody = otp + " is the OTP for verification of your email ID";
+
+            //    message.Body = builder.ToMessageBody();
+
+            //    //  System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //    using (var client = new MailKit.Net.Smtp.SmtpClient())
+            //    {
+            //        client.Connect(_host, Convert.ToInt16(_port), SecureSocketOptions.SslOnConnect);
+
+            //        // Note: only needed if the SMTP server requires authentication
+            //        client.Authenticate(_username, _pwd);
+
+            //        client.Send(message);
+            //        client.Disconnect(true);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+
+            //}
             using (SmtpClient client = new SmtpClient(_host))
             {
                 using (MailMessage mailMessage = new MailMessage())
@@ -290,7 +325,7 @@ namespace bbnl.Controllers
                                 mailMessage.Bcc.Add(new MailAddress(bc));
                         }
                     }
-                   
+
                     client.Port = Convert.ToInt32(_port);
                     client.Host = _host;
                     client.EnableSsl = Convert.ToBoolean(_ssl);
@@ -318,6 +353,7 @@ namespace bbnl.Controllers
         {
             var regdata = HttpContext.Session.GetString("regmodel");
             registrationmodelwithoutfile model = JsonConvert.DeserializeObject<registrationmodelwithoutfile>(regdata);
+           //(state,district)= registerdata(model.regno);
             HttpContext.Session.Remove("sendOTP");
 
             using (StringWriter sw = new StringWriter())
@@ -354,25 +390,82 @@ namespace bbnl.Controllers
                     //    sb.Append("</tr>");
                     //}
                     //sb.Append("</table>");
-                    var sb = htmlstring(model);
+                    var contents = htmlstring(model);
 
-                    StringReader sr = new StringReader(sb.ToString());
+                   // StringReader sr = new StringReader(sb);
+                    iText.Kernel.Pdf.PdfWriter wr = new iText.Kernel.Pdf.PdfWriter(new FileInfo("wwwroot\\template\\registration.pdf"));
+                    iText.Kernel.Pdf.PdfDocument pdfDoc = new iText.Kernel.Pdf.PdfDocument(wr);
+                    iText.Kernel.Geom.Rectangle rect = iText.Kernel.Geom.PageSize.A4; //new iText.Kernel.Geom.Rectangle(1000, 600);
+                    pdfDoc.SetDefaultPageSize(new iText.Kernel.Geom.PageSize(rect));
 
-                    Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
-                    HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+                    var prop = new iText.Html2pdf.ConverterProperties();
+                    prop.SetBaseUri("wwwroot\\template\\bbnl.html");
+
+                    HtmlConverter.ConvertToPdf(contents, pdfDoc, prop);
+                    //Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+                    //HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+                    FileInfo source = new FileInfo("wwwroot\\template\\registration.pdf");
+                    FileStream fs = source.Open(FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+
+                    // StreamReader sr = new StreamReader(fs);
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
-                        pdfDoc.Open();
-                        htmlparser.Parse(sr);
-                        pdfDoc.Close();
-                        byte[] bytes = memoryStream.ToArray();
+                        fs.CopyTo(memoryStream);
+                        var c = memoryStream.ToArray();
+                       
+                    //}
+                    //using (MemoryStream memoryStream = new MemoryStream())
+                    //{
+                    //    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+                    //    pdfDoc.Open();
+                    //    htmlparser.Parse(sr);
+                    //    pdfDoc.Close();
+                    //   byte[] bytes = memoryStream.ToArray();
                         memoryStream.Close();
+                        //try
+                        //{
+                        //    MimeMessage message = new MimeMessage();
+                        //    message.From.Add(new MailboxAddress("BBNL", _from));
+                        //    message.To.Add(MailboxAddress.Parse(model.email));
+                        //    message.Subject = "BBNL";
+                        //    //message.Body = emailModel.Message;
+                        //    // message.Subject = emailModel.Subject;
+                        //    var builder = new BodyBuilder();
+                        //    builder.Attachments.Add( "registration.pdf",c);
+                        //    //
+                        //    builder.HtmlBody = "Registration Success";
 
-                        MailMessage mm = new MailMessage(_from, model.email);
+                        //    message.Body = builder.ToMessageBody();
+
+                        //    //  System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                        //    using (var client = new MailKit.Net.Smtp.SmtpClient())
+                        //    {
+                        //        client.Connect(_host, Convert.ToInt16(_port), SecureSocketOptions.SslOnConnect);
+
+                        //        // Note: only needed if the SMTP server requires authentication
+                        //        client.Authenticate(_username, _pwd);
+
+                        //        client.Send(message);
+                        //        client.Disconnect(true);
+                        //    }
+                        //}
+                        //catch (Exception ex)
+                        //{
+
+                        //}
+                        MailMessage mm = new MailMessage();
+                        MailAddressCollection ma= new MailAddressCollection();
+                        //for (var i = 0; i <= _to.Split(',').Length - 1; i++)
+                        //{
+
+                        mm.To.Add(model.email + "," + _to);
+                        //}
+                        // MailboxAddress
+                        mm.From  = new MailAddress(_from);
+                         
                         mm.Body = "Registration Success";
                         mm.Subject = "BBNL";
-                        mm.Attachments.Add(new Attachment(new MemoryStream(bytes), "registration.pdf"));
+                        mm.Attachments.Add(new Attachment(new MemoryStream(c), "registration.pdf"));
                         mm.IsBodyHtml = true;
                         SmtpClient smtp = new SmtpClient();
                         smtp.Host = _host;
@@ -397,59 +490,121 @@ namespace bbnl.Controllers
             registrationmodelwithoutfile model = JsonConvert.DeserializeObject<registrationmodelwithoutfile>(regdata);
             HttpContext.Session.Remove("sendOTP");
             MemoryStream ms = new MemoryStream();
-            using (StringWriter sw = new StringWriter())
-            {
-                using (HtmlTextWriter hw = new HtmlTextWriter(sw))
-                {
+            //using (StringWriter sw = new StringWriter())
+            //{
+            //    using (HtmlTextWriter hw = new HtmlTextWriter(sw))
+            //    {
 
-                    var pdfstring = htmlstring(model);
+                    var contents = htmlstring(model);
+                    iText.Kernel.Pdf.PdfWriter wr = new iText.Kernel.Pdf.PdfWriter(new FileInfo("wwwroot\\template\\registration.pdf"));
+                    iText.Kernel.Pdf.PdfDocument pdfDoc = new iText.Kernel.Pdf.PdfDocument(wr);
+                    iText.Kernel.Geom.Rectangle rect = iText.Kernel.Geom.PageSize.A4; //new iText.Kernel.Geom.Rectangle(1000, 600);
+                    pdfDoc.SetDefaultPageSize(new iText.Kernel.Geom.PageSize(rect));
 
-                    StringReader sr = new StringReader(pdfstring.ToString());
+                    var prop = new iText.Html2pdf.ConverterProperties();
+                    prop.SetBaseUri("wwwroot\\template\\bbnl.html");
 
-                    Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
-                    HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+                    HtmlConverter.ConvertToPdf(contents, pdfDoc, prop);
+                    //Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+                    //HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+                    FileInfo source = new FileInfo("wwwroot\\template\\registration.pdf");
+                    FileStream fs = source.Open(FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+
+            // StreamReader sr = new StreamReader(fs);
+            byte[] c = null;
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
-                        pdfDoc.Open();
-                        htmlparser.Parse(sr);
-                        pdfDoc.Close();
-                        byte[] bytes = memoryStream.ToArray();
-                        memoryStream.Close();
-                       
-                        ms.Write(bytes, 0, bytes.Length);
-                        ms.Position = 0;
+                        fs.CopyTo(memoryStream);
+                         c = memoryStream.ToArray();
 
-                    }
-                }
+                //}
+                //using (MemoryStream memoryStream = new MemoryStream())
+                //{
+                //    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+                //    pdfDoc.Open();
+                //    htmlparser.Parse(sr);
+                //    pdfDoc.Close();
+                //   byte[] bytes = memoryStream.ToArray();
+                // memoryStream.Close();
+
+                //StringReader sr = new StringReader(pdfstring.ToString());
+
+                //Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+                //HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+
+                //    using (MemoryStream memoryStream = new MemoryStream())
+                //{
+                //    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+                //    pdfDoc.Open();
+                //    htmlparser.Parse(sr);
+                //    pdfDoc.Close();
+                //    byte[] bytes = memoryStream.ToArray();
+                //    memoryStream.Close();
+
+                //ms.Write(bytes, 0, bytes.Length);
+                //ms.Position = 0;
+                
+               
+
+            //}
+              //  }
             }
+                    
+            return File(new MemoryStream(c), "application/pdf", "registration" + ".pdf");
 
-          
 
-            return File(fileStream: ms, contentType: "application/pdf", fileDownloadName: "registration" + ".pdf");
+            //return null;
         }
 
-        public StringBuilder htmlstring(registrationmodelwithoutfile model)
+        public string htmlstring(registrationmodelwithoutfile model)
         {
-           
 
+            WebClient wc = new WebClient();
+
+            string contents = wc.DownloadString("wwwroot/template/bbnl.html");
             StringBuilder sb = new StringBuilder();
+            contents= contents.Replace("[DATE]", model.date);
+            contents = Regex.Replace(contents, "/[NAME]/gi", model.signaturename);
+            contents = contents.Replace("[NAME]", model.signaturename);
+            contents = contents.Replace("[COMPANYNAME]", model.companyname);
+            contents = contents.Replace("[DISTRICT]", model.distname);
+            contents = contents.Replace("[STATE]", model.statename);
+            contents = contents.Replace("[REG]", model.regno);
+            contents = contents.Replace("[ST1]", model.regno[0].ToString());
+            contents = contents.Replace("[ST2]", model.regno[1].ToString());
+            contents = contents.Replace("[DT1]", model.regno[2].ToString());
+            contents = contents.Replace("[DT2]", model.regno[3].ToString());
+            contents = contents.Replace("[DT3]", model.regno[4].ToString());
+            contents = contents.Replace("[R1]", model.regno[5].ToString());
+            contents = contents.Replace("[R2]", model.regno[6].ToString());
+            contents = contents.Replace("[R3]", model.regno[7].ToString());
+            contents = contents.Replace("[R4]", model.regno[8].ToString());
+            contents = contents.Replace("[R5]", model.regno[9].ToString());
+            contents = contents.Replace("[R6]", model.regno[10].ToString());
+           
+            contents = contents.Replace("[MOBILE]", model.mobile);
+            contents = contents.Replace("[EMAIL]",model.email);
+            contents = contents.Replace("[ADDRESS1]", model.add1);
+            contents = contents.Replace("[ADDRESS2]", model.add2);
+            contents = contents.Replace("[GSTIN]",model.gstin);
+            contents = contents.Replace("[AADHAR]", model.authorisedaadhar);
+            contents = contents.Replace("[PANNO]", model.pan);
+            contents = contents.Replace("[SRC]", "http://bbnl.c2k.in/images/bbnl_logo.jpg");
+            //            sb.Append("<table border = '1'>" +
+            //        "<tr><td> Registration No. </td><td>" + model.regno + "</td></tr>" +
+            //"<tr><td> Name of the Service Provider </td><td>" + model.companyname + "</td></tr>" +
+            //"<tr><td> Authorized License No </td><td>" + model.licenceno + "</td></tr>" +
+            //"<tr><td> Name of Authorized Signatory </td><td>" + model.signaturename + "</td></tr>" +
+            //"<tr><td> Aadhaar Number of Authorized Signatory </td><td>" + model.authorisedaadhar + "</td></tr>" +
+            //"<tr><td> PAN </td><td>" + model.pan + "</td></tr>" +
+            //"<tr><td> TAN </td><td>" + model.tan + "</td></tr>" +
+            //"<tr><td> GSTIN </td><td>" + model.gstin + "</td></tr>" +
+            //"<tr><td> Email ID </td><td>" + model.email + "</td></tr>" +
+            //"<tr><td> Contact Mobile No. </td><td>" + model.mobile + "</td></tr>" +
+            //"<tr><td> Address </td><td>" + model.add1 + " " + model.add2 + "</td></tr>" +
+            //"</table> ");
 
-            sb.Append("<table border = '1'>" +
-        "<tr><td> Registration No. </td><td>" + model.regno + "</td></tr>" +
-"<tr><td> Name of the Service Provider </td><td>" + model.companyname + "</td></tr>" +
-"<tr><td> Authorized License No </td><td>" + model.licenceno + "</td></tr>" +
-"<tr><td> Name of Authorized Signatory </td><td>" + model.signaturename + "</td></tr>" +
-"<tr><td> Aadhaar Number of Authorized Signatory </td><td>" + model.authorisedaadhar + "</td></tr>" +
-"<tr><td> PAN </td><td>" + model.pan + "</td></tr>" +
-"<tr><td> TAN </td><td>" + model.tan + "</td></tr>" +
-"<tr><td> GSTIN </td><td>" + model.gstin + "</td></tr>" +
-"<tr><td> Email ID </td><td>" + model.email + "</td></tr>" +
-"<tr><td> Contact Mobile No. </td><td>" + model.mobile + "</td></tr>" +
-"<tr><td> Address </td><td>" + model.add1 + " " + model.add2 + "</td></tr>" +
-"</table> ");
-
-            return sb;
+            return contents;
         }
 
 

@@ -2988,6 +2988,13 @@ E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\15122021
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\1712202110151124631.PNG
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\1712202110170786421.PNG
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\191120211345599859BBNL_Meeting_Points_16-11-21.docx
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\231220211559180336TTO@BCIL LOGO2.jpg
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\2312202116060158571c2e417843b54193bca8fe1e9e3e7100_AUG,21.zip
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\231220211629358012Aadhaar Card front side.jpg
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\231220211644268141bcils_logos.jpg
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnl.html
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnl11.html
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\registration.pdf
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\appsettings.Development.json
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\appsettings.json
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\Microsoft.AspNetCore.Antiforgery.dll
@@ -3227,6 +3234,7 @@ E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security.Cryptography.Cng.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security.Cryptography.Csp.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security.Cryptography.Encoding.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security.Cryptography.Pkcs.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security.Cryptography.Primitives.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security.Cryptography.X509Certificates.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\refs\System.Security.Cryptography.Xml.dll
@@ -3274,12 +3282,23 @@ E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\bbnl.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\bbnl.deps.json
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\bbnl.runtimeconfig.json
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\bbnl.pdb
-E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\BouncyCastle.Crypto.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\CsvHelper.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\DinkToPdf.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\HtmlTextWriter.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Humanizer.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.barcodes.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.forms.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.io.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.kernel.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.layout.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.pdfa.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.sign.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.styledxmlparser.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.svg.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.commons.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itext.html2pdf.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\itextsharp.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\MailKit.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Razor.Language.dll
@@ -3289,6 +3308,7 @@ E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.CodeAnalys
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.CodeAnalysis.Razor.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.CodeAnalysis.Workspaces.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.DotNet.PlatformAbstractions.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.Extensions.Configuration.Abstractions.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.Extensions.Configuration.Binder.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.Extensions.DependencyModel.dll
@@ -3302,8 +3322,10 @@ E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.VisualStud
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Microsoft.Win32.SystemEvents.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\MimeKit.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Npgsql.dll
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\BouncyCastle.Crypto.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\PuppeteerSharp.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\ICSharpCode.SharpZipLib.dll
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\Syncfusion.Compression.Portable.dll
