@@ -2994,6 +2994,10 @@ E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\23122021
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\PAN\231220211644268141bcils_logos.jpg
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnl.html
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnl11.html
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnl22.html
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnl545.html
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnl556.html
+E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\bbnlss.html
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\wwwroot\template\registration.pdf
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\appsettings.Development.json
 E:\bbnlnew\bbnl (2)\bbnl\bbnl\obj\Release\net5.0\PubTmp\Out\appsettings.json

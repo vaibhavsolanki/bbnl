@@ -400,6 +400,8 @@ namespace bbnl.Controllers
 
                     var prop = new iText.Html2pdf.ConverterProperties();
                     prop.SetBaseUri("wwwroot\\template\\bbnl.html");
+                    //registrationRepo re = new registrationRepo();
+                 string list=  Reposreg.statepmulisthead(model.state);
 
                     HtmlConverter.ConvertToPdf(contents, pdfDoc, prop);
                     //Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
@@ -458,7 +460,11 @@ namespace bbnl.Controllers
                         //for (var i = 0; i <= _to.Split(',').Length - 1; i++)
                         //{
 
-                        mm.To.Add(model.email + "," + _to);
+                        mm.To.Add(model.email );
+
+                        // for (var i = 0; i < list.Count - 1; i++) {
+                        if (list != null) mm.CC.Add(list);
+                                //}
                         //}
                         // MailboxAddress
                         mm.From  = new MailAddress(_from);
@@ -477,6 +483,36 @@ namespace bbnl.Controllers
                         smtp.Credentials = NetworkCred;
                         smtp.Port = Convert.ToInt32(_port);
                         smtp.Send(mm);
+
+                        //message to
+                        MailMessage mm1 = new MailMessage();
+                        MailAddressCollection ma1 = new MailAddressCollection();
+                        //for (var i = 0; i <= _to.Split(',').Length - 1; i++)
+                        //{
+
+                        mm1.To.Add(_to);
+
+                        // for (var i = 0; i < list.Count - 1; i++) {
+                        if (list != null) mm1.CC.Add(list);
+                        //}
+                        //}
+                        // MailboxAddress
+                        mm1.From = new MailAddress(_from);
+
+                        mm1.Body = "Registration Success";
+                        mm1.Subject = "BBNL";
+                        mm1.Attachments.Add(new Attachment(new MemoryStream(c), "registration.pdf"));
+                        mm1.IsBodyHtml = true;
+                        SmtpClient smtp1 = new SmtpClient();
+                        smtp1.Host = _host;
+                        smtp1.EnableSsl = Convert.ToBoolean(_ssl);
+                        System.Net.NetworkCredential NetworkCred1 = new System.Net.NetworkCredential();
+                        NetworkCred.UserName = _username;
+                        NetworkCred.Password = _pwd;
+                        smtp1.UseDefaultCredentials = Convert.ToBoolean(_defaultcred);
+                        smtp1.Credentials = NetworkCred;
+                        smtp1.Port = Convert.ToInt32(_port);
+                        smtp1.Send(mm1);
                     }
                 }
             }

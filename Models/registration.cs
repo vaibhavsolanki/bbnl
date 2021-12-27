@@ -37,8 +37,13 @@ namespace bbnl.Models
         public string state { get; set; }
 
     }
+    public class Stateorpmulist
+    {
+        public string name { get; set; }
+        public string email { get; set; }
 
-    public class PSUUser
+    }
+        public class PSUUser
     {
         public string UserId { get; set; }
         [Required(ErrorMessage = "Enter Name")]

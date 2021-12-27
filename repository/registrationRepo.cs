@@ -184,6 +184,38 @@ namespace bbnl.repository
            // return ret;
             return ("","");
         }
+        public string statepmulisthead(string state)
+        {
+            string ret="";
+            try
+            {
+                using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+                {
+                   
+
+                    NpgsqlCommand cmd = new NpgsqlCommand("getstatepmulist", conn);
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("p_state", state);
+                   
+
+                    conn.Open();
+
+                    DataTable dt = new DataTable();
+                    NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
+                    da.Fill(dt);
+                    ret = dt.Rows[0][0].ToString();
+                    //return (dt.Rows[0][0].ToString(), dt.Rows[0][0].ToString());
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            // return ret;
+            return ret;
+        }
 
         public string insertreg(registrationmodelwithoutfile model)
         {
